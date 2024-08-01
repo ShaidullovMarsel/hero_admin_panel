@@ -1,22 +1,15 @@
-
 import {useHttp} from '../../hooks/http.hook';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import nextId from 'react-id-generator';
+import { useDispatch } from 'react-redux';
 import { heroesCreated } from '../heroesList/heroesSlice';
+import { nanoid } from '@reduxjs/toolkit'
+import { selectAll } from '../heroesFilters/filtersSlice';
 
-// Задача для этого компонента:
-// Реализовать создание нового героя с введенными данными. Он должен попадать
-// в общее состояние и отображаться в списке + фильтроваться
-// Уникальный идентификатор персонажа можно сгенерировать через uiid
-// Усложненная задача:
-// Персонаж создается и в файле json при помощи метода POST
-// Дополнительно:
-// Элементы <option></option> желательно сформировать на базе
-// данных из фильтров
+import store from '../../store';
+
 
 const HeroesAddForm = () => {
-    const {filters} = useSelector(state => state.filters)
+    const filters = selectAll(store.getState());
     const dispatch = useDispatch();
     const {request} = useHttp();
 
@@ -27,7 +20,7 @@ const HeroesAddForm = () => {
     const onSubmitHandler = (e) => {
         e.preventDefault()
         const newHero = {
-            id: nextId(),
+            id: nanoid(),
             name: heroName,
             description: heroDescr,
             element: heroElement
